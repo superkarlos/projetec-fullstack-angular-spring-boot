@@ -1,6 +1,7 @@
 package com.project.app.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.hc.core5.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,11 @@ public class CategoriaService {
       return repository.findAll();
     }
 
-    public void salvar(Categoria categoria){
-        repository.save(categoria);
+    public Categoria salvar(Categoria categoria){
+       return repository.save(categoria);
+    }
+
+    public Optional<Categoria> findyById(Long id){
+        return repository.findById(id);
     }
 }
