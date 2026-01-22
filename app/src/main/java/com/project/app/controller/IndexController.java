@@ -21,6 +21,7 @@ import com.project.app.model.Categoria;
 import com.project.app.services.CategoriaService;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -39,7 +40,7 @@ public class IndexController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Categoria> save(@RequestBody Categoria categoria, HttpServletResponse response) {
+    public ResponseEntity<Categoria> save(@RequestBody  @Valid Categoria categoria, HttpServletResponse response) {
 
         Categoria data = categoriaService.salvar(categoria);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
