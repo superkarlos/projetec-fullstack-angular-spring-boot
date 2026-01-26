@@ -11,8 +11,8 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
 import com.project.app.exption.types.BusinessException;
+import com.project.app.exption.types.EntityNotFoundExceptionHandler;
 import com.project.app.exption.types.ErrorCustonController;
 
 @ControllerAdvice
@@ -85,6 +85,18 @@ public class ApiExceptionHandler {
         problem.setProperty("developerMessage", ex.getMessage());
 
         return ResponseEntity.internalServerError().body(problem);
+    }
+
+    @ExceptionHandler(EntityNotFoundExceptionHandler .class)
+    public ResponseEntity<ProblemDetail> EntityNotFoundExceptionhander( EntityNotFoundExceptionHandler  ex){
+
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        problem.setTitle("Erro no salvamento!");
+        problem.setDetail(ex.getLocalizedMessage());
+        problem.setProperty("developerMessage", "Codigo : 0032 ->" +  ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problem);
+
     }
 
     private String getMessage(String code) {
