@@ -21,11 +21,6 @@ public class ApiExceptionHandler {
     @Autowired
     private MessageSource messageSource;
 
-    /*
-     * ===============================
-     * JSON inválido / corpo mal formado
-     * ===============================
-     */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ProblemDetail> handleHttpMessageNotReadable(
             HttpMessageNotReadableException ex) {
@@ -38,11 +33,6 @@ public class ApiExceptionHandler {
         return ResponseEntity.badRequest().body(problem);
     }
 
-    /*
-     * ===============================
-     * Validação de campos (@Valid)
-     * ===============================
-     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ProblemDetail> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex) {
@@ -63,11 +53,6 @@ public class ApiExceptionHandler {
         return ResponseEntity.badRequest().body(problem);
     }
 
-    /*
-     * ===============================
-     * Regra de negócio
-     * ===============================
-     */
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ProblemDetail> handleBusinessException(
             BusinessException ex) {
@@ -90,11 +75,7 @@ public class ApiExceptionHandler {
         return ResponseEntity.badRequest().body(problem);
     }
 
-    /*
-     * ===============================
-     * Erro genérico (fallback)
-     * ===============================
-     */
+  
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ProblemDetail> handleGenericException(Exception ex) {
 
@@ -106,11 +87,6 @@ public class ApiExceptionHandler {
         return ResponseEntity.internalServerError().body(problem);
     }
 
-    /*
-     * ===============================
-     * Helpers
-     * ===============================
-     */
     private String getMessage(String code) {
         return messageSource.getMessage(code, null, LocaleContextHolder.getLocale());
     }

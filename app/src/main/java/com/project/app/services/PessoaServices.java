@@ -29,7 +29,7 @@ public class PessoaServices {
         return repository.save(pessoa);
     }
 
-    public void dell(Long id){
+    public void dell(Long id) throws ErrorCustonController{
         
         Optional<Pessoa> pessoa = repository.findById(id);
         if (pessoa.isEmpty()) {
