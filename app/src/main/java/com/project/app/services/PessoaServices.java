@@ -2,6 +2,8 @@ package com.project.app.services;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import com.project.app.exption.types.EntityNotFoundExceptionHandler;
 import com.project.app.model.Endereco;
@@ -38,18 +40,19 @@ public class PessoaServices {
     public Pessoa atualizar(Pessoa pessoa, Long id) throws EntityNotFoundExceptionHandler {
 
         Pessoa pessoaBanco = findById(id).orElseThrow(() -> new EntityNotFoundExceptionHandler("Id de pessoa não foi encontrado"));
-
-        if (pessoa.getNome() != null) { pessoaBanco.setNome(pessoa.getNome());}
-        if (pessoa.getAtivo() != null) {pessoaBanco.setAtivo(pessoa.getAtivo());  }
-
-        if (pessoa.getEndereco() != null) {
-            if (pessoaBanco.getEndereco() == null) {
-                pessoaBanco.setEndereco(new Endereco());
-            }
-            atualizarEndereco(pessoaBanco, pessoa);
-        }
-
+       // copie de para iguinorando
+        BeanUtils.copyProperties(pessoa, pessoaBanco,"codigo");
         return repository.save(pessoaBanco);
+    }
+
+    public Pessoa atualizarAtivo(Long id, Boolean ativo) throws EntityNotFoundExceptionHandler{
+        Optional<Pessoa> pessoa = findById(id);
+        
+        if (pessoa.isEmpty()) {
+            throw  new EntityNotFoundExceptionHandler("Id de pessoa não foi encontrado");
+        }
+          pessoa.get().setAtivo(ativo);
+        return repository.save(pessoa.get());
     }
 
     private void atualizarEndereco(Pessoa antes, Pessoa depois) {

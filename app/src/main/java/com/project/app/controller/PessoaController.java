@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.project.app.event.EventoCriado;
 import com.project.app.exption.types.EntityNotFoundExceptionHandler;
@@ -58,6 +59,14 @@ public class PessoaController {
         Pessoa pessoaAtualizada = pessoaServices.atualizar(pessoa, id);
         publisher.publishEvent(new EventoCriado(this, response, pessoaAtualizada.getCodigo()));
         return ResponseEntity.ok(pessoaAtualizada);
+    }
+
+    @PutMapping("/atualizar/{id}/ativar")
+    public ResponseEntity<Pessoa> ativar( @PathVariable(name = "id") Long id , @RequestParam(name = "ativo") Boolean boo ) throws EntityNotFoundExceptionHandler{
+
+        Pessoa pessoa = pessoaServices.atualizarAtivo(id,boo);
+        return ResponseEntity.ok().body(pessoa);
+
     }
 
     @DeleteMapping("/deletar/{id}")
