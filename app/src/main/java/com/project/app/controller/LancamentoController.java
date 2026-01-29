@@ -1,11 +1,11 @@
 package com.project.app.controller;
 
 import java.util.List;
-import java.util.concurrent.Flow.Publisher;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,18 +17,11 @@ import com.project.app.repository.filter.LancamentoFilter;
 @RequestMapping("/lancamentos")
 public class LancamentoController {
 
-    @Autowired 
-    private Publisher publisher;
-    
-    @Autowired 
-    private MessageSource messageSource;
-
     @Autowired
-    private LancamentoRepository repository;
+    private LancamentoRepository lancamentoRepository;
 
-    @GetMapping()
-    public List<Lancamento> findy(LancamentoFilter filter){
-        return repository.findAll();
+    @GetMapping("/buscar")
+    public List<Lancamento> pesquisar(LancamentoFilter lancamentoFilter) {
+        return lancamentoRepository.filtrar(lancamentoFilter);
     }
-    
 }
