@@ -3,6 +3,9 @@ package com.project.app.repository.imp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -39,9 +42,17 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
             ) );
         }
 
+        if (filter.getTipo() != null) {
+            predicates.add( 
+                cb.like( cb.lower(root.get("tipo")), "%" + filter.getTipo().toLowerCase() + "%" 
+            ) );
+        }
+
        
         cq.where(predicates.toArray(new Predicate[0]));
 
         return manager.createQuery(cq).getResultList();
     }
+
+
 }
