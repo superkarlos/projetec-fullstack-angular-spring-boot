@@ -5,7 +5,8 @@ import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import com.project.app.exption.types.EntityNotFoundExceptionHandler;
+
+import com.project.app.exption.types.EntityNotFoundException;
 import com.project.app.model.Endereco;
 import com.project.app.model.Pessoa;
 import com.project.app.repository.PessoaRepository;
@@ -21,38 +22,36 @@ public class PessoaServices {
         return this.repository.findAll();
     }
 
-    public Optional<Pessoa> findById(Long Id) {
-        return this.repository.findById(Id);
+    public Pessoa findById(Long id) {
+        return repository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Pessoa não encontrada"));
     }
+
 
     public Pessoa save(Pessoa pessoa) {
         return repository.save(pessoa);
     }
 
-    public boolean delete(Long id) throws EntityNotFoundExceptionHandler {
+    public boolean delete(Long id) throws EntityNotFoundException {
         if (!repository.existsById(id)) {
-            throw new EntityNotFoundExceptionHandler("pessoa não encontrada!");
+            throw new EntityNotFoundException("pessoa não encontrada!");
         }
         repository.deleteById(id);
         return true;
     }
 
-    public Pessoa atualizar(Pessoa pessoa, Long id) throws EntityNotFoundExceptionHandler {
+    public Pessoa atualizar(Pessoa pessoa, Long id) throws EntityNotFoundException {
 
-        Pessoa pessoaBanco = findById(id).orElseThrow(() -> new EntityNotFoundExceptionHandler("Id de pessoa não foi encontrado"));
+        Pessoa pessoaBanco = findById(id);
        // copie de para iguinorando
         BeanUtils.copyProperties(pessoa, pessoaBanco,"codigo");
         return repository.save(pessoaBanco);
     }
 
-    public Pessoa atualizarAtivo(Long id, Boolean ativo) throws EntityNotFoundExceptionHandler{
-        Optional<Pessoa> pessoa = findById(id);
-        
-        if (pessoa.isEmpty()) {
-            throw  new EntityNotFoundExceptionHandler("Id de pessoa não foi encontrado");
-        }
-          pessoa.get().setAtivo(ativo);
-        return repository.save(pessoa.get());
+    public Pessoa atualizarAtivo(Long id, Boolean ativo) throws EntityNotFoundException{
+        Pessoa pessoa = findById(id);
+        pessoa.setAtivo(ativo);
+        return repository.save(pessoa);
     }
 
     private void atualizarEndereco(Pessoa antes, Pessoa depois) {

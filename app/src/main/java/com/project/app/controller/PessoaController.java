@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.project.app.event.EventoCriado;
-import com.project.app.exption.types.EntityNotFoundExceptionHandler;
+
 import com.project.app.model.Pessoa;
 import com.project.app.services.PessoaServices;
 
@@ -41,8 +41,7 @@ public class PessoaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getPessoa(@PathVariable Long id) {
-        return pessoaServices.findById(id).<ResponseEntity<?>>map(ResponseEntity::ok)
-            .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pessoa não encontrada"));
+        return ResponseEntity.ok(pessoaServices.findById(id));
     }
 
     @PostMapping()
@@ -54,7 +53,7 @@ public class PessoaController {
 
     @PutMapping("/atualizar/{id}")
     public ResponseEntity<Pessoa> put(@PathVariable Long id, @RequestBody @Valid Pessoa pessoa,HttpServletResponse response) 
-        throws EntityNotFoundExceptionHandler {
+       {
             
         Pessoa pessoaAtualizada = pessoaServices.atualizar(pessoa, id);
         publisher.publishEvent(new EventoCriado(this, response, pessoaAtualizada.getCodigo()));
@@ -62,7 +61,7 @@ public class PessoaController {
     }
 
     @PutMapping("/atualizar/{id}/ativar")
-    public ResponseEntity<Pessoa> ativar( @PathVariable(name = "id") Long id , @RequestParam(name = "ativo") Boolean boo ) throws EntityNotFoundExceptionHandler{
+    public ResponseEntity<Pessoa> ativar( @PathVariable(name = "id") Long id , @RequestParam(name = "ativo") Boolean boo ) {
 
         Pessoa pessoa = pessoaServices.atualizarAtivo(id,boo);
         return ResponseEntity.ok().body(pessoa);
@@ -70,7 +69,7 @@ public class PessoaController {
     }
 
     @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundExceptionHandler {
+    public ResponseEntity<String> delete(@PathVariable Long id) {
         pessoaServices.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("Pessoa deletada"); // 404
     }
