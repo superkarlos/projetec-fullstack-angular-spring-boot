@@ -1,9 +1,12 @@
 package com.project.app.exption;
 
 import java.util.List;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -121,6 +124,18 @@ public class ApiExceptionHandler {
         problem.setDetail("A URL informada não existe.");
         return problem;
     }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail execptionDataIntegrityViolationException(DataIntegrityViolationException dataIntegrityViolationException){
+
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        String msg = ExceptionUtils.getRootCauseMessage(dataIntegrityViolationException);
+        problem.setTitle("Operação não permitida : ");
+        problem.setDetail(msg);
+        return problem;
+    }
+
 
     /* ================================
        Helpers

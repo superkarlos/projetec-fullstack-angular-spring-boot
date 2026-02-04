@@ -14,6 +14,7 @@ import com.project.app.repository.LancamentoRepository;
 import com.project.app.repository.filter.LancamentoFilter;
 import com.project.app.repository.imp.GenericSpecification;
 
+import groovyjarjarantlr4.v4.parse.ANTLRParser.prequelConstruct_return;
 import jakarta.persistence.EntityExistsException;
 
 @Service
@@ -27,15 +28,15 @@ public class LancamentoService {
 
     public Page<Lancamento> filtrar(LancamentoFilter filter, Pageable pageable) {
 
-        GenericSpecification<Lancamento> specBuilder =new GenericSpecification<>();
-        Specification<Lancamento> spec =specBuilder.build(filter);
+        GenericSpecification<Lancamento> specBuilder = new GenericSpecification<>();
+        Specification<Lancamento> spec = specBuilder.build(filter);
         return lancamentoRepository.findAll(spec, pageable);
     }
 
-   // public List<Lancamento> pesquisar(LancamentoFilter lancamentoFilter) {
-      //  return lancamentoRepository.filtrar(lancamentoFilter);
- //   }
-    public List<Lancamento> findAll(){
+    // public List<Lancamento> pesquisar(LancamentoFilter lancamentoFilter) {
+    // return lancamentoRepository.filtrar(lancamentoFilter);
+    // }
+    public List<Lancamento> findAll() {
         return lancamentoRepository.findAll();
     }
 
@@ -45,6 +46,12 @@ public class LancamentoService {
         throw new EntityNotFoundException("Lancamento não exites");
     }
     return data.get();
-}
+
+    
+    }
+
+    public Lancamento save ( Lancamento data){
+        return lancamentoRepository.save(data);
+    }
 
 }
