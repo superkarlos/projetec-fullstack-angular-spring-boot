@@ -20,6 +20,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import com.project.app.exption.types.BusinessException;
 import com.project.app.exption.types.EntityNotFoundException;
+import com.project.app.exption.types.PessoaInexistenteOuIntiva;
 
 
 @RestControllerAdvice
@@ -136,7 +137,18 @@ public class ApiExceptionHandler {
         return problem;
     }
 
+    //PessoaInexistenteOuIntiva
+    @ExceptionHandler(PessoaInexistenteOuIntiva.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail pessoaInexistenteOuIntivaEx(PessoaInexistenteOuIntiva PessoaInexistenteOuIntiva){
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        String msg = ExceptionUtils.getRootCauseMessage(PessoaInexistenteOuIntiva);
+        problem.setTitle("Obs : " + PessoaInexistenteOuIntiva.getLocalizedMessage() );
+        problem.setDetail(  msg);
+        return problem;
+    }
 
+     
     /* ================================
        Helpers
        ================================ */
