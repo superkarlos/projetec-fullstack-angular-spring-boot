@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,14 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import com.project.app.event.EventoCriado;
 import com.project.app.exption.types.BusinessException;
 import com.project.app.model.Lancamento;
 import com.project.app.repository.filter.LancamentoFilter;
 import com.project.app.services.LancamentoService;
-
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
@@ -69,5 +66,11 @@ public class LancamentoController {
 
         return ResponseEntity.created(location).body(data);
     }
+
+    @DeleteMapping("/deletar/{cod}")
+    public ResponseEntity<String> dell(@PathVariable Long cod){
+        lancamentoService.dell(cod);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Lançamento excluido com sucesso!");
+    } 
 
 }

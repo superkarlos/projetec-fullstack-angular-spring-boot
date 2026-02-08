@@ -56,4 +56,9 @@ public class LancamentoService {
         return lancamentoRepository.save(data);
     }
 
+    public void dell(Long id){
+      findById(id);
+      lancamentoRepository.deleteById(id);
+    }
+
 }
