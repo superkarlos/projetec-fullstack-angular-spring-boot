@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -147,6 +148,18 @@ public class ApiExceptionHandler {
         problem.setDetail(  msg);
         return problem;
     }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ProblemDetail pessoaInexistenteOuIntivaExAtuh(BadCredentialsException badCredentialsException){
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
+        String msg = ExceptionUtils.getRootCauseMessage(badCredentialsException);
+        problem.setTitle(badCredentialsException.getLocalizedMessage() );
+        problem.setDetail( msg);
+        return problem;
+    }
+
+    
 
      
     /* ================================
